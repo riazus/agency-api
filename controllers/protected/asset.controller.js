@@ -38,7 +38,11 @@ const getAssetById = async (req, res) => {
 }
 
 const createNewAsset = async (req, res) => {
-	const { title, address, number_of_rooms, images } = req?.body;
+	if (!req?.user_type && req.user_type !== "agent") {
+    return res.sendStatus(401);
+  }
+  
+  const { title, address, number_of_rooms, images } = req?.body;
 	if (!title || !number_of_rooms || !address || !images)
 		return res.status(400).json({
 			// Invalid
@@ -75,9 +79,92 @@ const createNewAsset = async (req, res) => {
 	return res.status(201).send(result);
 };
 
+const modifyAssetById = async (req, res) => {
+	if (!req?.params?.id) {
+		return res.status(400).json({ message: "ID is required" }); // Invalid
+	}
+
+	const foundAsset = await Asset.findOne({ _id: req.params.id }).exec();
+	if (!foundAsset) {
+		return res
+			.status(404) //Not found
+			.json({ message: `Asset ID ${req.params.id} not found` });
+	}
+	if (foundAsset.created_by != req.id) {
+		return res
+			.status(403) //Forbidden
+			.json({ message: `this user cannot delete this asset` });
+	}
+
+	if (req?.body?.title) {
+    foundAsset.title = req.body.title;
+  }
+	if (req?.body?.address) {
+    foundAsset.address = req.body.address;
+  }
+	if (req?.body?.number_of_rooms) {
+		foundAsset.number_of_rooms = req.body.number_of_rooms;
+  }
+  if (req?.body?.images) {
+		foundAsset.images = [...req.body.images];
+  }
+
+	foundAsset.save();
+	res.send(foundAsset);
+};
+
+const deleteAssetById = async (req, res) => {
+	if (!req?.params?.id) {
+		return res.status(400).json({ message: "ID is required" }); // Invalid
+	}
+
+	const foundAsset = await Asset.findOne({ _id: req.params.id }).exec();
+	if (!foundAsset) {
+		return res
+			.status(404) //Not found
+			.json({ message: `Asset ID ${req.params.id} not found` });
+	}
+	if (foundAsset.created_by != req.id) {
+		return res
+			.status(403) //Forbidden
+			.json({ message: `this user cannot delete this asset` });
+	}
+
+	const result = await Asset.deleteOne({ _id: req?.params?.id });
+	res.json(result);
+};
+
+const applyToAssetId = async (req, res) => {
+	if (!req?.params?.id) {
+		return res.status(400).json({ message: "ID is required" }); // Invalid
+	}
+	const foundAsset = await Asset.exists({ _id: req.params.id });
+	if (!foundAsset) {
+		return res
+			.status(404) //Not found
+			.json({ message: `Asset ID ${req.params.id} not found` });
+	}
+
+	const foundUser = await User.findById(req.id).exec();
+	if (!foundUser.assets.includes(req.params.id)) {
+		foundUser.assets.push(req.params.id);
+		await foundUser.save();
+		res.status(200).send({
+			message: `Succesfully apply to asset ID ${req.params.id}`,
+		});
+	} else {
+		res.status(200).send({
+			message: `Already apply to asset ID ${req.params.id}`,
+		});
+	}
+};
+
 module.exports = {
   getAllAssets,
   getUserAssets,
   getAssetById,
-  createNewAsset
+  createNewAsset,
+  modifyAssetById,
+  deleteAssetById,
+  applyToAssetId
 };
