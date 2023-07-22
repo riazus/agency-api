@@ -11,7 +11,10 @@ const createNewUser = async (req, res, user_type) => {
 
 	//check if the user doesn't already exist
 	const userAlreadyExist = await User.findOne({ email: email }).exec();
-	if (userAlreadyExist) return res.sendStatus(409); //Conflict
+	if (userAlreadyExist) {
+		return res.sendStatus(409); //Conflict	
+	}
+	
 	try {
 		// hash and salt the password before we write it on the database
 		const hashedSaltPwd = await bcrypt.hash(password, 10);

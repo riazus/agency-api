@@ -12,7 +12,10 @@ const refreshAccessToken = async (req, res) => {
 		refresh_token: refresh_token,
 	}).exec();
 
-	if (!foundUser) return res.sendStatus(403);
+	if (!foundUser) {
+		return res.sendStatus(403);
+	} 
+
 	jwt.verify(
 		refresh_token,
 		process.env.REFRESH_TOKEN_SECRET,
