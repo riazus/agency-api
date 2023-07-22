@@ -42,12 +42,12 @@ const createNewAsset = async (req, res) => {
     return res.sendStatus(401);
   }
   
-  const { title, address, number_of_rooms, images } = req?.body;
-	if (!title || !number_of_rooms || !address || !images)
+  const { title, address, number_of_rooms } = req?.body;
+	if (!title || !number_of_rooms || !address)
 		return res.status(400).json({
 			// Invalid
 			message:
-				"title, address, number_of_rooms, images attributes are required for this request.",
+				"title, address, number_of_rooms attributes are required for this request.",
 		});
   
 	const newAsset = {
@@ -55,8 +55,16 @@ const createNewAsset = async (req, res) => {
 		address: address,
 		number_of_rooms: Number(number_of_rooms),
 		created_by: req.id,
-		images: images,
+		images: [],
 	};
+
+  for (let i in req?.files) {
+		const image = {
+			mime_type: req.files[i].mimetype,
+			data: req.files[i].buffer,
+		};
+		newAsset.images.push(image);
+	}
   
 	let result;
 	try {
@@ -105,9 +113,18 @@ const modifyAssetById = async (req, res) => {
 	if (req?.body?.number_of_rooms) {
 		foundAsset.number_of_rooms = req.body.number_of_rooms;
   }
-  if (req?.body?.images) {
-		foundAsset.images = [...req.body.images];
-  }
+
+  if (req?.files?.length >= 1) {
+		const imgArray = [];
+		for (let i in req?.files) {
+			const image = {
+				mime_type: req.files[i].mimetype,
+				data: req.files[i].buffer,
+			};
+			imgArray.push(image);
+		}
+		foundAsset.images = [...imgArray];
+	}
 
 	foundAsset.save();
 	res.send(foundAsset);

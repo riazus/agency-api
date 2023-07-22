@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema({
-  url: { type: String, unique: true, required: true }
+	data: { type: Buffer, required: true },
+	mime_type: { type: String, required: true },
 });
 
-module.exports = mongoose.model("Image", ImageSchema);
+module.exports = ImageSchema;
