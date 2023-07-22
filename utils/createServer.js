@@ -38,6 +38,7 @@ const createServer = () => {
 
 	//protected routes
 	server.use("/user", require("../routes/protected/user.route"));
+	server.use("/asset", require("../routes/protected/asset.route"));
 
 	return server;
 };
