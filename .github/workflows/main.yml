@@ -11,6 +11,7 @@ jobs:
     env:
       ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
       REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+      DATABASE_URI: ${{ secrets.DATABASE_URI}}
 
     strategy:
       matrix:
