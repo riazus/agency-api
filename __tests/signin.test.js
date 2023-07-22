@@ -7,7 +7,7 @@ const app = createServer();
 
 describe("Sign in", () => {
 	beforeAll(async () => {
-		const connection = await mongoose.connect(String(process.env.DATABASE_URI), {
+		const connection = await mongoose.connect(globalThis.__MONGO_URI__, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 		});

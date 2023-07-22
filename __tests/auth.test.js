@@ -1,4 +1,5 @@
 require("dotenv").config();
+require('../controllers/refresh.controller');
 const mongoose = require("mongoose");
 const User = require("../models/User");
 const request = require("supertest");
@@ -15,7 +16,7 @@ describe("Authentification", () => {
 	let cookies;
 
 	beforeAll(async () => {
-		const connection = await mongoose.connect(String(process.env.DATABASE_URI), {
+		const connection = await mongoose.connect(globalThis.__MONGO_URI__, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 		});
