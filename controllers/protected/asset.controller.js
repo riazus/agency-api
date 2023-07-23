@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const User = require("../../models/User");
 const Asset = require("../../models/Asset");
 
@@ -84,6 +85,9 @@ const createNewAsset = async (req, res) => {
 		foundAgency.assets.push(result._id);
 		foundAgency.save();
 	}
+
+	result.images = [];
+
 	return res.status(201).send(result);
 };
 
@@ -101,7 +105,7 @@ const modifyAssetById = async (req, res) => {
 	if (foundAsset.created_by != req.id) {
 		return res
 			.status(403) //Forbidden
-			.json({ message: `this user cannot delete this asset` });
+			.json({ message: `this user cannot modify this asset` });
 	}
 
 	if (req?.body?.title) {

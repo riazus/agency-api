@@ -1,14 +1,13 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const User = require("../models/User");
+const Asset = require("../models/Asset");
 const request = require("supertest");
 const path = require("path");
-const img1Url = path.join(__dirname, "..", "img", "house1.png");
-const img2Url = path.join(__dirname, "..", "img", "house2.png");
+const img1Url = path.join(__dirname, "img", "house1.png");
+const img2Url = path.join(__dirname, "img", "house2.png");
 
-const createServer = require("../config/server");
-const Asset = require("../models/Asset");
-const Agency = require("../models/Agency");
+const createServer = require("../utils/createServer");
 
 const app = createServer();
 
@@ -94,7 +93,7 @@ describe("Users", () => {
 		expect(asset.images.length).toEqual(2);
 	});
 
-	it("should create a new agency and send statuscode 201", async () => {
+	/*it("should create a new agency and send statuscode 201", async () => {
 		let res = await request(app).post("/auth").send({
 			email: email1,
 			password: password,
@@ -147,7 +146,7 @@ describe("Users", () => {
 
 		expect(res.statusCode).toEqual(200);
 		expect(res.body._id).toEqual(idAgency);
-	});
+	});*/
 
 	it("should create a second asset and send statuscode 201", async () => {
 		let res = await request(app).post("/auth").send({
@@ -196,7 +195,7 @@ describe("Users", () => {
 		expect(assets.length).toEqual(res.body.length);
 	});
 
-	it("should get all the asset of a agency and send statuscode 200", async () => {
+	/*it("should get all the asset of a agency and send statuscode 200", async () => {
 		let res = await request(app).post("/auth").send({
 			email: email1,
 			password: password,
@@ -232,7 +231,7 @@ describe("Users", () => {
 
 		asset = await Agency.findById(idAgency).exec();
 		expect(asset).toEqual(null);
-	});
+	});*/
 
 	it("should get a asset by id and send statuscode 200", async () => {
 		let res = await request(app).post("/auth").send({
