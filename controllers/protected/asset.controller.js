@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../../models/User");
 const Asset = require("../../models/Asset");
+const Agency = require("../../models/Agency");
 
 const getAllAssets = async (req, res) => {
   const assets = await Asset.find({});
@@ -180,6 +181,26 @@ const applyToAssetId = async (req, res) => {
 	}
 };
 
+const getAssetsByAgency = async (req, res) => {
+	if (!req?.params?.id) {
+		return res.status(400).json({ message: "ID is required" }); // Invalid
+	}
+
+	const foundAgency = await Agency.findOne({ _id: req.params.id }).exec();
+	if (!foundAgency) {
+		return res
+			.status(404) //Not found
+			.json({ message: `Agency ID ${req.params.id} not found` });
+	}
+
+	const assets = await Asset.find({ _id: { $in: foundAgency.assets } });
+	if (!assets) {
+		return res.status(204).json({ message: "No asset found." });
+	}
+
+	res.json(assets);
+};
+
 module.exports = {
   getAllAssets,
   getUserAssets,
@@ -187,5 +208,6 @@ module.exports = {
   createNewAsset,
   modifyAssetById,
   deleteAssetById,
-  applyToAssetId
+  applyToAssetId,
+	getAssetsByAgency
 };

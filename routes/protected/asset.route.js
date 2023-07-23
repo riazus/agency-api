@@ -24,7 +24,7 @@ router.post(
 // Success: 201 Created, Response body: Asset
 // Error: 403 Forbidden (invalid access token), 400 Bad Request (missing body parameters)
 
-//router.get("/agency/:id", assetsController.getAssetsByAgency);
+router.get("/agency/:id", assetsController.getAssetsByAgency);
 // GET /agency/:id - Get all assets of the agency with id :id
 // Authorization: Set the access token in the Authorization header as a Bearer token
 // Success: 200 OK, Response body: [Asset]
