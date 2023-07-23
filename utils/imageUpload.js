@@ -8,7 +8,7 @@ const imageUpload = () => {
 			fileSize: 12000000, // 12 MB size limit for a file
 		},
 		fileFilter(req, file, cb) {
-			if (!file.originalname.match(/\.(png|jpg|jpeg|webp)$/)) {
+			if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
 				// upload only png, jpg and webp format
 				return cb(new Error("Invalid format image"));
 			}
