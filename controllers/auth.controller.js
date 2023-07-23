@@ -10,7 +10,10 @@ const authUser = async (req, res) => {
 			.json({ message: "Email and password are required." });
 
 	const foundUser = await User.findOne({ email: email }).exec();
-	if (!foundUser) return res.sendStatus(401);
+	if (!foundUser) {
+		return res.sendStatus(401);
+	}
+
 	const match = await bcrypt.compare(password, foundUser.password);
 	if (match) {
 		const accessToken = jwt.sign(
