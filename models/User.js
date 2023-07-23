@@ -10,7 +10,14 @@ const UserSchema = new Schema({
 	password: { type: String, required: true },
 	user_type: { type: String, enum: ["candidate", "agent"], required: true },
 	refresh_token: { type: String, default: "" },
-	assets: { type: [Schema.Types.ObjectId], default: [] }
+	assets: { 
+		type: [Schema.Types.ObjectId], 
+		ref: 'Asset', 
+		default: [] },
+	agency: { 
+		type: Schema.Types.ObjectId,
+		ref: 'Agency'
+	}
 });
 
 module.exports = mongoose.model("User", UserSchema);
