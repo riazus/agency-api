@@ -1,7 +1,7 @@
 # agency-api
 This is a backend-only application designed to manage and handle relationships among Assets, Users, and Agencies.
 
-Stack:
+### Stack:
 - Node.js +18.x
 - Express
 - MongoDB
